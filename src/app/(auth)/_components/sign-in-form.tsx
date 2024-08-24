@@ -1,6 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -21,12 +22,18 @@ const signInFormSchema = z.object({
 type SignInForm = z.infer<typeof signInFormSchema>
 
 export function SignInForm() {
-  const { register, handleSubmit } = useForm<SignInForm>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignInForm>({
     mode: 'onBlur',
     resolver: zodResolver(signInFormSchema),
   })
 
-  function handleSignIn({ email, password }: SignInForm) {
+  async function handleSignIn({ email, password }: SignInForm) {
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+
     console.log({ email, password })
   }
 
@@ -41,15 +48,25 @@ export function SignInForm() {
           className="h-12"
           {...register('email')}
         />
+        {errors.email && (
+          <p className="text-sm text-red-600">{errors.email.message}</p>
+        )}
       </div>
 
       <div className="space-y-0.5">
         <Label htmlFor="password">Senha</Label>
         <PasswordInput name="password" register={register} />
+        {errors.password && (
+          <p className="text-sm text-red-600">{errors.password.message}</p>
+        )}
       </div>
 
-      <Button type="submit" className="w-full h-12">
-        Entrar no sistema
+      <Button type="submit" disabled={isSubmitting} className="w-full h-12">
+        {isSubmitting ? (
+          <Loader2 className="size-4 animate-spin" />
+        ) : (
+          'Entrar no sistema'
+        )}
       </Button>
     </form>
   )

@@ -9,7 +9,7 @@ export function Header() {
     <header className="px-3 flex items-center gap-4">
       <Image src="/logoIcon.svg" width={40} height={40} alt="Dashcoin Icon" />
 
-      <span className="text-sm text-muted-foreground truncate">
+      <span className="flex flex-col text-sm text-muted-foreground truncate">
         Usuário:{' '}
         <span className="text-primary">Richard Rodrigues da Silva</span>
       </span>
