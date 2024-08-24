@@ -1,9 +1,14 @@
+import { Metadata } from 'next'
 import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 
 import { SignInForm } from '../_components/sign-in-form'
+
+export const metadata: Metadata = {
+  title: 'Entrar',
+}
 
 export default function SignInPage() {
   return (

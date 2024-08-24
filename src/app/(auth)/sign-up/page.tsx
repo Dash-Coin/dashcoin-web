@@ -1,9 +1,14 @@
+import { Metadata } from 'next'
 import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 
 import { SignUpForm } from '../_components/sign-up-form'
+
+export const metadata: Metadata = {
+  title: 'Cadastre-se',
+}
 
 export default function SignUpPage() {
   return (
