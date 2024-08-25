@@ -45,7 +45,7 @@ export function SignInForm() {
           id="email"
           type="email"
           placeholder="exemplo@exemplo.com"
-          className="h-12"
+          className="md:h-12"
           {...register('email')}
         />
         {errors.email && (
@@ -61,7 +61,7 @@ export function SignInForm() {
         )}
       </div>
 
-      <Button type="submit" disabled={isSubmitting} className="w-full h-12">
+      <Button type="submit" disabled={isSubmitting} className="w-full md:h-12">
         {isSubmitting ? (
           <Loader2 className="size-4 animate-spin" />
         ) : (

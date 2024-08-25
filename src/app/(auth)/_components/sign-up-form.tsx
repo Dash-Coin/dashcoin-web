@@ -49,7 +49,7 @@ export function SignUpForm() {
           id="name"
           type="name"
           placeholder="Digite seu nome completo"
-          className="h-12"
+          className="md:h-12"
           {...register('name')}
         />
         {errors.name && (
@@ -63,7 +63,7 @@ export function SignUpForm() {
           id="email"
           type="email"
           placeholder="exemplo@exemplo.com"
-          className="h-12"
+          className="md:h-12"
           {...register('email')}
         />
         {errors.email && (
@@ -79,7 +79,7 @@ export function SignUpForm() {
         )}
       </div>
 
-      <Button type="submit" disabled={isSubmitting} className="w-full h-12">
+      <Button type="submit" disabled={isSubmitting} className="w-full md:h-12">
         {isSubmitting ? (
           <Loader2 className="size-4 animate-spin" />
         ) : (

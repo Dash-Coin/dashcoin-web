@@ -1,4 +1,4 @@
-import { ChevronDown, LogOut, TrendingDown, User, Wallet2 } from 'lucide-react'
+import { LogOut, Menu, TrendingDown, User, Wallet2 } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -10,7 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { cn } from '@/lib/utils'
 
 import { AlterNameDialog } from './alter-name-dialog'
 
@@ -24,15 +23,10 @@ export function DetailsDropdown() {
           <Button
             size="sm"
             variant="outline"
-            className="min-w-40 ml-auto justify-start gap-4"
+            className="w-8 md:w-fit ml-auto px-0 md:px-3"
           >
-            {isOpen ? 'Recolher detalhes' : 'Ver detalhes'}
-            <ChevronDown
-              className={cn(
-                'size-4 ml-auto transition-all',
-                isOpen && '-rotate-180',
-              )}
-            />
+            <Menu className="size-4 md:mr-2" />
+            <span className="hidden md:block">Menu</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">

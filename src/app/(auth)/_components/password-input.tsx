@@ -26,7 +26,7 @@ export function PasswordInput<T extends FieldValues>({
         id={name}
         type={isOcult ? 'password' : 'text'}
         placeholder="Digite sua senha"
-        className="h-12"
+        className="md:h-12"
         {...register(name)}
       />
 
@@ -35,9 +35,13 @@ export function PasswordInput<T extends FieldValues>({
         size="icon"
         variant="ghost"
         onClick={handleViewPassword}
-        className="absolute top-0 right-0 size-12"
+        className="absolute top-0 right-0 md:size-12"
       >
-        {isOcult ? <Eye className="size-5" /> : <EyeOff className="size-5" />}
+        {isOcult ? (
+          <Eye className="size-4 md:size-5" />
+        ) : (
+          <EyeOff className="size-4 md:size-5" />
+        )}
       </Button>
     </div>
   )
