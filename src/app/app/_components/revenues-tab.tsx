@@ -14,6 +14,7 @@ import {
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 
 import { CreateRevenueDialog } from './create-revenue-dialog'
+import { ItemOfList } from './item-of-list'
 
 export function RevenuesTab() {
   return (
@@ -29,13 +30,11 @@ export function RevenuesTab() {
         <CardContent>
           {Array.from({ length: 8 }).map((_, i) => {
             return (
-              <div
+              <ItemOfList
                 key={i}
-                className="px-3 py-2 flex items-center gap-4 border-b"
-              >
-                <p className="text-sm">Descrição da receita</p>
-                <b className="ml-auto text-sm font-medium">R$ 2.000,00</b>
-              </div>
+                description="Descrição da receita"
+                value={2000}
+              />
             )
           })}
         </CardContent>
