@@ -7,11 +7,27 @@ import {
 
 export function DashboardTab() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Gráficos</CardTitle>
-        <CardDescription>Exemplo...</CardDescription>
-      </CardHeader>
-    </Card>
+    <div className="grid grid-cols-2 gap-4">
+      <Card className="col-span-1">
+        <CardHeader>
+          <CardTitle>Gráfico de despesas</CardTitle>
+          <CardDescription>Exemplo...</CardDescription>
+        </CardHeader>
+      </Card>
+
+      <Card className="col-span-1">
+        <CardHeader>
+          <CardTitle>Gráfico de receita</CardTitle>
+          <CardDescription>Exemplo...</CardDescription>
+        </CardHeader>
+      </Card>
+
+      <Card className="col-span-full">
+        <CardHeader>
+          <CardTitle>Gráficos geral</CardTitle>
+          <CardDescription>Exemplo...</CardDescription>
+        </CardHeader>
+      </Card>
+    </div>
   )
 }
