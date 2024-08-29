@@ -5,28 +5,37 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 
+import { ExpensesChart } from './expenses-chart'
+import { RevenuesChart } from './revenue-chart'
+import { RevenueInYearChart } from './revenue-in-year-chart'
+
 export function DashboardTab() {
   return (
     <div className="grid md:grid-cols-2 gap-4">
       <Card className="col-span-1">
         <CardHeader>
-          <CardTitle>Gráfico de despesas</CardTitle>
-          <CardDescription>Exemplo...</CardDescription>
+          <CardTitle>Despesas</CardTitle>
+          <CardDescription>Veja um gráfico de suas despesas.</CardDescription>
         </CardHeader>
+        <ExpensesChart />
       </Card>
 
       <Card className="col-span-1">
         <CardHeader>
-          <CardTitle>Gráfico de receita</CardTitle>
-          <CardDescription>Exemplo...</CardDescription>
+          <CardTitle>Receitas</CardTitle>
+          <CardDescription>Veja um gráfico de suas receitas.</CardDescription>
         </CardHeader>
+        <RevenuesChart />
       </Card>
 
       <Card className="col-span-full">
         <CardHeader>
-          <CardTitle>Gráficos geral</CardTitle>
-          <CardDescription>Exemplo...</CardDescription>
+          <CardTitle>Receita gerada no ano</CardTitle>
+          <CardDescription>
+            Veja um gráfico geral de Janeiro até Dezembro de 2024.
+          </CardDescription>
         </CardHeader>
+        <RevenueInYearChart />
       </Card>
     </div>
   )
