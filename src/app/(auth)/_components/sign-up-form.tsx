@@ -2,12 +2,15 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { signUp } from '@/http/sign-up'
 
 import { PasswordInput } from './password-input'
 
@@ -26,6 +29,8 @@ const signUpFormSchema = z.object({
 type SignUpForm = z.infer<typeof signUpFormSchema>
 
 export function SignUpForm() {
+  const router = useRouter()
+
   const {
     register,
     handleSubmit,
@@ -35,14 +40,18 @@ export function SignUpForm() {
     resolver: zodResolver(signUpFormSchema),
   })
 
-  async function handleSignIn({ name, email, password }: SignUpForm) {
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+  async function handleSignUp({ name, email, password }: SignUpForm) {
+    try {
+      await signUp({ name, email, password })
 
-    console.log({ name, email, password })
+      router.push('/sign-in')
+    } catch (err) {
+      toast.error('Usuário já existe')
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit(handleSignIn)} className="space-y-5">
+    <form onSubmit={handleSubmit(handleSignUp)} className="space-y-5">
       <div className="space-y-0.5">
         <Label htmlFor="name">Nome completo</Label>
         <Input

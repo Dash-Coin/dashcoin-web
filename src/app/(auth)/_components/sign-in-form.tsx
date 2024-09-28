@@ -1,13 +1,17 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import Cookies from 'js-cookie'
 import { Loader2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { signIn } from '@/http/sign-in'
 
 import { PasswordInput } from './password-input'
 
@@ -22,6 +26,8 @@ const signInFormSchema = z.object({
 type SignInForm = z.infer<typeof signInFormSchema>
 
 export function SignInForm() {
+  const router = useRouter()
+
   const {
     register,
     handleSubmit,
@@ -32,9 +38,21 @@ export function SignInForm() {
   })
 
   async function handleSignIn({ email, password }: SignInForm) {
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    try {
+      const { refreshToken, user } = await signIn({ email, password })
 
-    console.log({ email, password })
+      Cookies.set('token', refreshToken, {
+        expires: 7,
+      })
+
+      Cookies.set('user', user.id.toString(), {
+        expires: 7,
+      })
+
+      router.push('/app')
+    } catch (err) {
+      toast.error('Email ou senha incorretos')
+    }
   }
 
   return (
