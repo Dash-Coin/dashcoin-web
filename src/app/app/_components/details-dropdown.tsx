@@ -1,4 +1,7 @@
-import { LogOut, Menu, TrendingDown, User, Wallet2 } from 'lucide-react'
+'use client'
+
+import { useQuery } from '@tanstack/react-query'
+import { LogOut, Menu, User, Wallet2 } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -10,11 +13,37 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { fetchExpenses } from '@/http/fetch-expenses'
+import { fetchRevenues } from '@/http/fetch-revenues'
 
 import { AlterNameDialog } from './alter-name-dialog'
 
 export function DetailsDropdown() {
   const [isOpen, setIsOpen] = useState(false)
+
+  const { data: revenues } = useQuery({
+    queryKey: ['revenue-balance'],
+    queryFn: fetchRevenues,
+    staleTime: Infinity,
+  })
+
+  const { data: expenses } = useQuery({
+    queryKey: ['expense-balance'],
+    queryFn: fetchExpenses,
+    staleTime: Infinity,
+  })
+
+  const positiveBalance =
+    revenues?.transactions
+      .filter((transaction) => transaction.type === true)
+      .reduce((acc, transaction) => acc + transaction.value, 0) ?? 0
+
+  const negativeBalance =
+    expenses?.transactions
+      .filter((transaction) => transaction.type === false)
+      .reduce((acc, transaction) => acc + transaction.value, 0) ?? 0
+
+  const totalBalance = positiveBalance - negativeBalance
 
   return (
     <Dialog>
@@ -35,15 +64,12 @@ export function DetailsDropdown() {
 
             <div className="flex flex-col gap-px">
               <span className="text-sm font-semibold">Saldo total</span>
-              <span className="text-sm">R$ 3.523,53</span>
-            </div>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <TrendingDown className="size-6 mr-4 text-red-600" />
-
-            <div className="flex flex-col gap-px">
-              <span className="text-sm font-semibold">Saldo devedor</span>
-              <span className="text-sm">R$ 432,99</span>
+              <span className="text-sm">
+                {totalBalance?.toLocaleString('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL',
+                })}
+              </span>
             </div>
           </DropdownMenuItem>
           <DropdownMenuSeparator />

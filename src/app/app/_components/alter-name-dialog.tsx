@@ -1,6 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -14,6 +16,8 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { alterUsername } from '@/http/alter-username'
+import { fetchProfile } from '@/http/fetch-profile'
 
 const nameFormSchema = z.object({
   name: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
@@ -22,6 +26,14 @@ const nameFormSchema = z.object({
 type NameForm = z.infer<typeof nameFormSchema>
 
 export function AlterNameDialog() {
+  const queryClient = useQueryClient()
+
+  const { data } = useQuery({
+    queryKey: ['profile'],
+    queryFn: fetchProfile,
+    staleTime: Infinity,
+  })
+
   const {
     register,
     handleSubmit,
@@ -29,12 +41,26 @@ export function AlterNameDialog() {
   } = useForm<NameForm>({
     mode: 'onBlur',
     resolver: zodResolver(nameFormSchema),
+    values: {
+      name: data?.user.username ?? '',
+    },
+  })
+
+  const { mutateAsync: alterUsernameFn } = useMutation({
+    mutationFn: alterUsername,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['profile'] })
+    },
   })
 
   async function handleAlterName({ name }: NameForm) {
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    try {
+      await alterUsernameFn({ username: name })
 
-    console.log({ name })
+      toast.success('Username alterado com sucesso!')
+    } catch (err) {
+      toast.error('Verifique e tente novamente.')
+    }
   }
 
   return (

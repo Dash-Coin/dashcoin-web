@@ -39,13 +39,13 @@ export function SignInForm() {
 
   async function handleSignIn({ email, password }: SignInForm) {
     try {
-      const { refreshToken, user } = await signIn({ email, password })
+      const { token, userId } = await signIn({ email, password })
 
-      Cookies.set('token', refreshToken, {
+      Cookies.set('token', token, {
         expires: 7,
       })
 
-      Cookies.set('user', user.id.toString(), {
+      Cookies.set('user', userId.toString(), {
         expires: 7,
       })
 

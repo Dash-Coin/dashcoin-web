@@ -28,7 +28,7 @@ const chartData = [
 const chartConfig = {
   revenue: {
     label: 'Receita',
-    color: 'hsl(var(--chart-5))',
+    color: '#4c1d95',
   },
 } satisfies ChartConfig
 

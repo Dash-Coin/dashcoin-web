@@ -1,54 +1,46 @@
 'use client'
 
+import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { Label, Pie, PieChart } from 'recharts'
 
 import { CardContent } from '@/components/ui/card'
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart'
-
-const chartData = [
-  { expense: 'food', value: 275, fill: 'var(--color-food)' },
-  { expense: 'home', value: 200, fill: 'var(--color-home)' },
-  { expense: 'education', value: 287, fill: 'var(--color-education)' },
-  { expense: 'health', value: 173, fill: 'var(--color-health)' },
-  { expense: 'other', value: 190, fill: 'var(--color-other)' },
-]
-
-const chartConfig = {
-  visitors: {
-    label: 'Visitors',
-  },
-  food: {
-    label: 'Alimentação',
-    color: 'hsl(var(--chart-1))',
-  },
-  home: {
-    label: 'Casa',
-    color: 'hsl(var(--chart-2))',
-  },
-  education: {
-    label: 'Educação',
-    color: 'hsl(var(--chart-3))',
-  },
-  health: {
-    label: 'Saúde',
-    color: 'hsl(var(--chart-4))',
-  },
-  other: {
-    label: 'Outros',
-    color: 'hsl(var(--chart-5))',
-  },
-} satisfies ChartConfig
+import { fetchExpenses } from '@/http/fetch-expenses'
+import { chartConfig } from '@/utils/chart-config'
 
 export function ExpensesChart() {
-  const totalVisitors = useMemo(() => {
+  const { data } = useQuery({
+    queryKey: ['expenses'],
+    queryFn: fetchExpenses,
+  })
+
+  const chartData = useMemo(() => {
+    return (
+      data?.transactions.map((expense) => {
+        const category = expense.category as keyof typeof chartConfig // Garante que `category` é uma chave válida
+        const config = chartConfig[category] // Obtém a configuração correspondente
+
+        // Verifica se `config` tem a propriedade `color` e usa uma cor padrão se não tiver
+        return {
+          expense: expense.category,
+          value: expense.value,
+          fill:
+            config && 'color' in config
+              ? config.color
+              : 'hsl(var(--default-color))', // Verifica se `color` existe em `config`
+        }
+      }) || []
+    )
+  }, [data?.transactions])
+
+  const totalExpenses = useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.value, 0)
-  }, [])
+  }, [chartData])
 
   return (
     <CardContent>
@@ -83,7 +75,7 @@ export function ExpensesChart() {
                         y={viewBox.cy}
                         className="fill-foreground text-3xl font-bold"
                       >
-                        {totalVisitors.toLocaleString()}
+                        {totalExpenses.toLocaleString()}
                       </tspan>
                       <tspan
                         x={viewBox.cx}

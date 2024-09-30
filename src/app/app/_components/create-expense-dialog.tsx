@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
 import { Loader2 } from 'lucide-react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   DialogClose,
   DialogContent,
@@ -15,11 +15,21 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { createTransaction } from '@/http/create-transaction'
+import { fetchCategories } from '@/http/fetch-categories'
 
 const expenseFormSchema = z.object({
   description: z.string().min(1, 'Descrição obrigatória'),
+  category: z.string().min(1, 'Categoria obrigatória'),
   value: z.coerce.number().min(1, 'Valor obrigatório'),
-  isRepeatEveryMonth: z.boolean().default(false),
 })
 
 type ExpenseForm = z.infer<typeof expenseFormSchema>
@@ -36,14 +46,17 @@ export function CreateExpenseDialog() {
     resolver: zodResolver(expenseFormSchema),
   })
 
+  const { data: categories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: fetchCategories,
+  })
+
   async function handleCreateExpense({
     description,
+    category,
     value,
-    isRepeatEveryMonth,
   }: ExpenseForm) {
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    console.log({ description, value, isRepeatEveryMonth })
+    await createTransaction({ description, category, type: false, value })
 
     reset()
   }
@@ -73,6 +86,39 @@ export function CreateExpenseDialog() {
         </div>
 
         <div className="space-y-0.5">
+          <Label htmlFor="category">Categoria</Label>
+          <Controller
+            name="category"
+            control={control}
+            render={({ field }) => {
+              return (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger>
+                    <SelectValue
+                      id="category"
+                      placeholder="Selecione..."
+                      {...field}
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {categories?.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )
+            }}
+          />
+          {errors.category && (
+            <p className="text-sm text-red-600">{errors.category.message}</p>
+          )}
+        </div>
+
+        <div className="space-y-0.5">
           <Label htmlFor="value">Valor</Label>
           <Input
             id="value"
@@ -84,25 +130,6 @@ export function CreateExpenseDialog() {
           {errors.value && (
             <p className="text-sm text-red-600">{errors.value.message}</p>
           )}
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <Controller
-            control={control}
-            name="isRepeatEveryMonth"
-            render={({ field }) => {
-              return (
-                <Checkbox
-                  id={field.name}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              )
-            }}
-          />
-          <Label htmlFor="isRepeatEveryMonth">
-            Esse valor vai se repetir a cada mês
-          </Label>
         </div>
 
         <DialogFooter className="mt-4">

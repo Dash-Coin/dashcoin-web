@@ -42,7 +42,7 @@ export function SignUpForm() {
 
   async function handleSignUp({ name, email, password }: SignUpForm) {
     try {
-      await signUp({ name, email, password })
+      await signUp({ username: name, email, password })
 
       router.push('/sign-in')
     } catch (err) {

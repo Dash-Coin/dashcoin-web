@@ -1,17 +1,15 @@
 import { api } from '@/lib/axios'
 
 interface SignUpRequest {
-  name: string
+  username: string
   email: string
   password: string
 }
 
-export async function signUp({ name, email, password }: SignUpRequest) {
-  const newUser = await api.post('/user/registrar', {
-    name,
+export async function signUp({ username, email, password }: SignUpRequest) {
+  await api.post('/user/registrar', {
+    username,
     email,
     password,
   })
-
-  return newUser
 }
